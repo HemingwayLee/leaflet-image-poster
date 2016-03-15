@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>leaflet-image-swisstopo</title>
+        <meta name="description" content="Export swisstopo map to an image file using leaflet-image.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
+              integrity="sha384-99ZJFcuBCh9c/V/+8YwDX/TUGG8JWMG+gKFJWzk0BZP3IoDMN+pLGd3/H0yjg4oa"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <div class="map" id="map"></div>
+        <div>
+            <button id="snap">Take a snapshot</button>
+            <div id="snapshot"></div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"
+                integrity="sha384-Lh7SNUss9JoImCvc96eCUnLX3HvY4kb0UZCWZbYWvceJ+o5CJeOJqqNoheaGkNHT"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.12/proj4.js"
+                integrity="sha384-g71Vd1BhAzR1AWGvw5hCQvG8P8DqJCCPUvoTqnSxsXOecKi7SayxNDUqZ06bHeEb"
+                crossorigin="anonymous"></script>
+        <script src="js/proj4leaflet.js"></script>
+        <script src="bundle.js"></script>
+    </body>
+</html>
