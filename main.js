@@ -1,4 +1,5 @@
 var leafletImage = require('./leaflet-image');
+var fileSaver = require('node-safe-filesaver');
 
 var map = initMap();
 
@@ -7,13 +8,9 @@ document.getElementById('snap').addEventListener('click', function() {
     var width = +document.getElementById('width').value;
     var height = +document.getElementById('height').value;
     leafletImage(map, width, height, function(err, canvas) {
-        var img = document.createElement('img');
-        img.width = width;
-        img.height = height;
-        img.src = canvas.toDataURL();
-        var snapshot = document.getElementById('snapshot');
-        snapshot.innerHTML = '';
-        snapshot.appendChild(img);
+        canvas.toBlob(function(blob) {
+            fileSaver.saveAs(blob, "map.png");
+        });
     });
 });
 
