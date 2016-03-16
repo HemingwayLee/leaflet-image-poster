@@ -1,14 +1,15 @@
-var leafletImage = require('leaflet-image');
+var leafletImage = require('./leaflet-image');
 
 var map = initMap();
 
 // Add snapshot listener
 document.getElementById('snap').addEventListener('click', function() {
-    leafletImage(map, function(err, canvas) {
+    var width = +document.getElementById('width').value;
+    var height = +document.getElementById('height').value;
+    leafletImage(map, width, height, function(err, canvas) {
         var img = document.createElement('img');
-        var dimensions = map.getSize();
-        img.width = dimensions.x;
-        img.height = dimensions.y;
+        img.width = width;
+        img.height = height;
         img.src = canvas.toDataURL();
         var snapshot = document.getElementById('snapshot');
         snapshot.innerHTML = '';
