@@ -1,5 +1,5 @@
-# leaflet-image-swisstopo
-Export swisstopo map to an image file using [leaflet-image](https://github.com/mapbox/leaflet-image).
+# leaflet-image-poster
+Export leaflet map to a big image file using [leaflet-image](https://github.com/mapbox/leaflet-image).
 
 ## Usage
 

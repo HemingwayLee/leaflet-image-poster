@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>leaflet-image-swisstopo</title>
-        <meta name="description" content="Export swisstopo map to an image file using leaflet-image.">
+        <title>leaflet-image-poster</title>
+        <meta name="description" content="Export leaflet map to a big image file using leaflet-image.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet"
@@ -18,8 +18,8 @@
             Width: <input type="number" id="width" value="1000" min="10" max="10000">
             Height: <input type="number" id="height" value="1000" min="10" max="10000">
             <button id="snap">Take a snapshot</button>
-            <div id="snapshot"></div>
         </div>
+        <ul id="layers"></ul>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"
                 integrity="sha384-Lh7SNUss9JoImCvc96eCUnLX3HvY4kb0UZCWZbYWvceJ+o5CJeOJqqNoheaGkNHT"
                 crossorigin="anonymous"></script>

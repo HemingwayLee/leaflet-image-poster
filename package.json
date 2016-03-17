@@ -1,12 +1,12 @@
 {
-  "name": "leaflet-image-swisstopo",
+  "name": "leaflet-image-poster",
   "version": "0.1.0",
-  "description": "Export swisstopo map to an image file using leaflet-image.",
+  "description": "Export leaflet map to a big image file using leaflet-image.",
   "scripts": {
     "start": "browserify main.js > bundle.js && http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "rzoller/leaflet-image-swisstopo",
+  "repository": "rzoller/leaflet-image-poster",
   "author": "Roman Zoller",
   "license": "MIT",
   "devDependencies": {
