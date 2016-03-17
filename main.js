@@ -42,7 +42,8 @@ function initMap() {
         scale: scale
     }).setView(unproject(center), 15);
 
-    var tileLayer = L.tileLayer('https://wmts6.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/21781/{z}/{y}/{x}.jpeg', {
+    var tileLayer = L.tileLayer('https://wmts{s}.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/21781/{z}/{y}/{x}.jpeg', {
+        subdomains: ['', '5', '6', '7', '8', '9'],
         maxZoom: resolutions.length - 1,
         minZoom: 15,
         attribution: 'Map data &copy; swisstopo'

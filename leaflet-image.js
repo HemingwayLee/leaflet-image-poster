@@ -78,7 +78,7 @@ module.exports = function leafletImage(map, width, height, callback) {
             tiles = [],
             center = tileBounds.getCenter(),
             j, i, point,
-            tileQueue = new queue(1);
+            tileQueue = new queue();
 
         for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
