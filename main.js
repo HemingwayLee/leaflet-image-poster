@@ -15,21 +15,22 @@ document.getElementById('snap').addEventListener('click', function() {
 });
 
 function initMap() {
-    var resolutions = [4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250, 1000, 750, 650, 500, 250, 100, 50, 20, 10, 5];
-
-    var center = [660000, 185000];
-    var bounds = [[420000, 30000], [900000, 350000]];
-    var origin = [420000, 350000];
+    // Definition of available tiles (bounding box) and resolutions
+    // Source: https://api3.geo.admin.ch/services/sdiservices.html#parameters
+    var topLeft = L.point(420000, 350000);
+    var bottomRight = L.point(900000, 30000);
+    var center = topLeft.add(bottomRight).divideBy(2);
+    var resolutions = [4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250, 1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5];
 
     // Definition for projected coordinate system CH1903 / LV03
     // Source: https://epsg.io/21781.js
     var crs = new L.Proj.CRS('EPSG:21781', '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs', {
         resolutions: resolutions,
-        origin: origin
+        origin: [topLeft.x, topLeft.y]
     });
 
     var unproject = function(p) {
-        return crs.projection.unproject(L.point(p[0], p[1]));
+        return crs.projection.unproject(p);
     };
 
     var scale = function(zoom) {
@@ -38,7 +39,7 @@ function initMap() {
 
     var map = L.map('map', {
         crs: crs,
-        maxBounds: L.latLngBounds(unproject(bounds[0]), unproject(bounds[1])),
+        maxBounds: L.latLngBounds(unproject(topLeft), unproject(bottomRight)),
         scale: scale
     }).setView(unproject(center), 15);
 
