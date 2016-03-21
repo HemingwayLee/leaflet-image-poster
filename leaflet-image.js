@@ -1,3 +1,11 @@
+/*
+* Contains code from leaflet-image
+* Copyright (c) 2015, Mapbox
+* All rights reserved.
+* Copyrights licensed under the Simplified BSD License.
+* See the accompanying LICENSE file for terms.
+*/
+
 var queue = require('./queue');
 
 // leaflet-image
