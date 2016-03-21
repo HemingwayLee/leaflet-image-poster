@@ -1,0 +1,14 @@
+.map {
+    width: 500px;
+    height: 500px;
+    margin-bottom: 20px;
+}
+
+.layer-entry {
+    cursor: pointer;
+    color: #0078A8;
+    text-decoration: none;
+}
+.layer-entry:hover {
+    text-decoration: underline;
+}
