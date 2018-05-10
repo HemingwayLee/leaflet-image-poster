@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Export leaflet map to a big image file using leaflet-image.",
   "scripts": {
-    "start": "browserify main.js > bundle.js && http-server",
+    "start": "browserify main.js > bundle.js && http-server -a localhost",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "rzoller/leaflet-image-poster",
