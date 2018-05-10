@@ -8,6 +8,7 @@ var fileSaver = require('node-safe-filesaver');
 var map;
 var currentCrs;
 var lastView = {};
+var pixelLimit;
 
 var layers = {
     'mapbox.blue-marble-topo-jan': [initMapbox, 'EPSG:3857'],
@@ -45,6 +46,11 @@ function init(layer) {
     document.getElementById('snap').addEventListener('click', function() {
         var width = +document.getElementById('width').value;
         var height = +document.getElementById('height').value;
+        var pixels = width * height;
+        if (pixelLimit && pixels > pixelLimit) {
+            alert('The terms of service do not allow downloading more than ' + pixelLimit + ' pixels.');
+            return;
+        }
         leafletImage(map, width, height, function(err, canvas) {
             canvas.toBlob(function(blob) {
                 fileSaver.saveAs(blob, "map.png");
@@ -77,6 +83,7 @@ function setLayer(layer) {
 }
 
 function initMapbox(id) {
+    pixelLimit = undefined;
     var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                  '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                  'Imagery © <a href="https://mapbox.com">Mapbox</a>';
@@ -99,6 +106,7 @@ function initMapbox(id) {
 }
 
 function initStamen(id, imgFormat) {
+    pixelLimit = undefined;
     imgFormat = imgFormat ? imgFormat : 'jpg';
 
     var stamenAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
@@ -125,6 +133,8 @@ function initStamen(id, imgFormat) {
 }
 
 function initSwisstopo() {
+    pixelLimit = 2000000;
+
     // Definition of available tiles (bounding box) and resolutions
     // Source: https://api3.geo.admin.ch/services/sdiservices.html#parameters
     var topLeft = L.point(420000, 350000);
