@@ -1,3 +1,5 @@
+require('blueimp-canvas-to-blob');
+
 var leafletImage = require('./leaflet-image');
 var fileSaver = require('node-safe-filesaver');
 
