@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /*
 * Contains code from leaflet-image
 * Copyright (c) 2015, Mapbox
@@ -169,12 +169,18 @@ module.exports = function leafletImage(map, width, height, callback) {
     }
 };
 
-},{"./queue":4}],2:[function(require,module,exports){
+},{"./queue":5}],2:[function(require,module,exports){
+'use strict';
+
+require('blueimp-canvas-to-blob');
+
 var leafletImage = require('./leaflet-image');
 var fileSaver = require('node-safe-filesaver');
 
+var map;
 var currentCrs;
 var lastView = {};
+var pixelLimit;
 
 var layers = {
     'mapbox.blue-marble-topo-jan': [initMapbox, 'EPSG:3857'],
@@ -183,7 +189,6 @@ var layers = {
     'mapbox.dark': [initMapbox, 'EPSG:3857'],
     'mapbox.emerald': [initMapbox, 'EPSG:3857'],
     'mapbox.high-contrast': [initMapbox, 'EPSG:3857'],
-    'mapbox.landsat-live': [initMapbox, 'EPSG:3857'],
     'mapbox.light': [initMapbox, 'EPSG:3857'],
     'mapbox.natural-earth-2': [initMapbox, 'EPSG:3857'],
     'mapbox.outdoors': [initMapbox, 'EPSG:3857'],
@@ -213,6 +218,11 @@ function init(layer) {
     document.getElementById('snap').addEventListener('click', function() {
         var width = +document.getElementById('width').value;
         var height = +document.getElementById('height').value;
+        var pixels = width * height;
+        if (pixelLimit && pixels > pixelLimit) {
+            alert('The terms of service do not allow downloading more than ' + pixelLimit + ' pixels.');
+            return;
+        }
         leafletImage(map, width, height, function(err, canvas) {
             canvas.toBlob(function(blob) {
                 fileSaver.saveAs(blob, "map.png");
@@ -241,16 +251,17 @@ function addLayer(layer) {
 function setLayer(layer) {
     var data = layers[layer];
     currentCrs = data[1];
-    map = data[0].apply(null, [layer].concat(data.slice(2)));
+    data[0].apply(null, [layer].concat(data.slice(2)));
 }
 
 function initMapbox(id) {
+    pixelLimit = undefined;
     var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                  '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                  'Imagery © <a href="https://mapbox.com">Mapbox</a>';
-    var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+    var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicnowIiwiYSI6ImNqaDBtbXZ6cTF0OG4yd280MDUwejB0N3kifQ.iBwY_zB2gzQizC2W-0zE2A';
 
-    var map = L.map('map');
+    map = L.map('map');
 
     if (lastView[currentCrs]) {
         map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
@@ -264,11 +275,10 @@ function initMapbox(id) {
         attribution: mbAttr,
         id: id
     }).addTo(map);
-
-    return map;
 }
 
 function initStamen(id, imgFormat) {
+    pixelLimit = undefined;
     imgFormat = imgFormat ? imgFormat : 'jpg';
 
     var stamenAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
@@ -277,7 +287,7 @@ function initStamen(id, imgFormat) {
                      'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
     var stamenUrl = 'http://{s}.tile.stamen.com/{id}/{z}/{x}/{y}.{imgFormat}';
 
-    var map = L.map('map');
+    map = L.map('map');
 
     if (lastView[currentCrs]) {
         map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
@@ -292,11 +302,11 @@ function initStamen(id, imgFormat) {
         id: id,
         imgFormat: imgFormat
     }).addTo(map);
-
-    return map;
 }
 
 function initSwisstopo() {
+    pixelLimit = 2000000;
+
     // Definition of available tiles (bounding box) and resolutions
     // Source: https://api3.geo.admin.ch/services/sdiservices.html#parameters
     var topLeft = L.point(420000, 350000);
@@ -319,7 +329,7 @@ function initSwisstopo() {
         return 1 / resolutions[zoom];
     };
 
-    var map = L.map('map', {
+    map = L.map('map', {
         crs: crs,
         maxBounds: L.latLngBounds(unproject(topLeft), unproject(bottomRight)),
         scale: scale
@@ -338,11 +348,137 @@ function initSwisstopo() {
         attribution: 'Map data &copy; swisstopo'
     });
     map.addLayer(tileLayer);
-
-    return map;
 }
 
-},{"./leaflet-image":1,"node-safe-filesaver":3}],3:[function(require,module,exports){
+},{"./leaflet-image":1,"blueimp-canvas-to-blob":3,"node-safe-filesaver":4}],3:[function(require,module,exports){
+/*
+ * JavaScript Canvas to Blob
+ * https://github.com/blueimp/JavaScript-Canvas-to-Blob
+ *
+ * Copyright 2012, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * https://opensource.org/licenses/MIT
+ *
+ * Based on stackoverflow user Stoive's code snippet:
+ * http://stackoverflow.com/q/4998908
+ */
+
+/* global atob, Blob, define */
+
+;(function (window) {
+  'use strict'
+
+  var CanvasPrototype =
+    window.HTMLCanvasElement && window.HTMLCanvasElement.prototype
+  var hasBlobConstructor =
+    window.Blob &&
+    (function () {
+      try {
+        return Boolean(new Blob())
+      } catch (e) {
+        return false
+      }
+    })()
+  var hasArrayBufferViewSupport =
+    hasBlobConstructor &&
+    window.Uint8Array &&
+    (function () {
+      try {
+        return new Blob([new Uint8Array(100)]).size === 100
+      } catch (e) {
+        return false
+      }
+    })()
+  var BlobBuilder =
+    window.BlobBuilder ||
+    window.WebKitBlobBuilder ||
+    window.MozBlobBuilder ||
+    window.MSBlobBuilder
+  var dataURIPattern = /^data:((.*?)(;charset=.*?)?)(;base64)?,/
+  var dataURLtoBlob =
+    (hasBlobConstructor || BlobBuilder) &&
+    window.atob &&
+    window.ArrayBuffer &&
+    window.Uint8Array &&
+    function (dataURI) {
+      var matches,
+        mediaType,
+        isBase64,
+        dataString,
+        byteString,
+        arrayBuffer,
+        intArray,
+        i,
+        bb
+      // Parse the dataURI components as per RFC 2397
+      matches = dataURI.match(dataURIPattern)
+      if (!matches) {
+        throw new Error('invalid data URI')
+      }
+      // Default to text/plain;charset=US-ASCII
+      mediaType = matches[2]
+        ? matches[1]
+        : 'text/plain' + (matches[3] || ';charset=US-ASCII')
+      isBase64 = !!matches[4]
+      dataString = dataURI.slice(matches[0].length)
+      if (isBase64) {
+        // Convert base64 to raw binary data held in a string:
+        byteString = atob(dataString)
+      } else {
+        // Convert base64/URLEncoded data component to raw binary:
+        byteString = decodeURIComponent(dataString)
+      }
+      // Write the bytes of the string to an ArrayBuffer:
+      arrayBuffer = new ArrayBuffer(byteString.length)
+      intArray = new Uint8Array(arrayBuffer)
+      for (i = 0; i < byteString.length; i += 1) {
+        intArray[i] = byteString.charCodeAt(i)
+      }
+      // Write the ArrayBuffer (or ArrayBufferView) to a blob:
+      if (hasBlobConstructor) {
+        return new Blob([hasArrayBufferViewSupport ? intArray : arrayBuffer], {
+          type: mediaType
+        })
+      }
+      bb = new BlobBuilder()
+      bb.append(arrayBuffer)
+      return bb.getBlob(mediaType)
+    }
+  if (window.HTMLCanvasElement && !CanvasPrototype.toBlob) {
+    if (CanvasPrototype.mozGetAsFile) {
+      CanvasPrototype.toBlob = function (callback, type, quality) {
+        var self = this
+        setTimeout(function () {
+          if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
+            callback(dataURLtoBlob(self.toDataURL(type, quality)))
+          } else {
+            callback(self.mozGetAsFile('blob', type))
+          }
+        })
+      }
+    } else if (CanvasPrototype.toDataURL && dataURLtoBlob) {
+      CanvasPrototype.toBlob = function (callback, type, quality) {
+        var self = this
+        setTimeout(function () {
+          callback(dataURLtoBlob(self.toDataURL(type, quality)))
+        })
+      }
+    }
+  }
+  if (typeof define === 'function' && define.amd) {
+    define(function () {
+      return dataURLtoBlob
+    })
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = dataURLtoBlob
+  } else {
+    window.dataURLtoBlob = dataURLtoBlob
+  }
+})(window)
+
+},{}],4:[function(require,module,exports){
 /* FileSaver.js
  * A saveAs() FileSaver implementation.
  * 2015-05-07.2
@@ -603,7 +739,7 @@ if (typeof module !== "undefined" && module.exports) {
   });
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function() {
   if (typeof module === "undefined") self.queue = queue;
   else module.exports = queue;
