@@ -1,8 +1,11 @@
+'use strict';
+
 require('blueimp-canvas-to-blob');
 
 var leafletImage = require('./leaflet-image');
 var fileSaver = require('node-safe-filesaver');
 
+var map;
 var currentCrs;
 var lastView = {};
 
@@ -70,7 +73,7 @@ function addLayer(layer) {
 function setLayer(layer) {
     var data = layers[layer];
     currentCrs = data[1];
-    map = data[0].apply(null, [layer].concat(data.slice(2)));
+    data[0].apply(null, [layer].concat(data.slice(2)));
 }
 
 function initMapbox(id) {
@@ -79,7 +82,7 @@ function initMapbox(id) {
                  'Imagery © <a href="https://mapbox.com">Mapbox</a>';
     var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicnowIiwiYSI6ImNqaDBtbXZ6cTF0OG4yd280MDUwejB0N3kifQ.iBwY_zB2gzQizC2W-0zE2A';
 
-    var map = L.map('map');
+    map = L.map('map');
 
     if (lastView[currentCrs]) {
         map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
@@ -93,8 +96,6 @@ function initMapbox(id) {
         attribution: mbAttr,
         id: id
     }).addTo(map);
-
-    return map;
 }
 
 function initStamen(id, imgFormat) {
@@ -106,7 +107,7 @@ function initStamen(id, imgFormat) {
                      'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
     var stamenUrl = 'http://{s}.tile.stamen.com/{id}/{z}/{x}/{y}.{imgFormat}';
 
-    var map = L.map('map');
+    map = L.map('map');
 
     if (lastView[currentCrs]) {
         map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
@@ -121,8 +122,6 @@ function initStamen(id, imgFormat) {
         id: id,
         imgFormat: imgFormat
     }).addTo(map);
-
-    return map;
 }
 
 function initSwisstopo() {
@@ -148,7 +147,7 @@ function initSwisstopo() {
         return 1 / resolutions[zoom];
     };
 
-    var map = L.map('map', {
+    map = L.map('map', {
         crs: crs,
         maxBounds: L.latLngBounds(unproject(topLeft), unproject(bottomRight)),
         scale: scale
@@ -167,6 +166,4 @@ function initSwisstopo() {
         attribution: 'Map data &copy; swisstopo'
     });
     map.addLayer(tileLayer);
-
-    return map;
 }
