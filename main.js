@@ -83,26 +83,38 @@ function setLayer(layer) {
 }
 
 function initMapbox(id) {
+    console.log("!!!??!!");
+
     pixelLimit = undefined;
-    var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                 'Imagery © <a href="https://mapbox.com">Mapbox</a>';
+    // var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    //              '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    //              'Imagery © <a href="https://mapbox.com">Mapbox</a>';
     var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicnowIiwiYSI6ImNqaDBtbXZ6cTF0OG4yd280MDUwejB0N3kifQ.iBwY_zB2gzQizC2W-0zE2A';
 
     map = L.map('map');
+    map.setView([33.6178243,130.4220436], 15);
 
-    if (lastView[currentCrs]) {
-        map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
-    } else {
-        map.setView([0, 0], 1);
-    }
+    // if (lastView[currentCrs]) {
+    //     map.setView(lastView[currentCrs].center, lastView[currentCrs].zoom);
+    // } else {
+    //     console.log("ELSE!!!");
+    //     map.setView([51.505, -0.09], 13);
+    // }
+
+
+//     <a href="https://www.google.com/maps/place/%E6%98%A5%E9%99%BD%E8%BB%92/@33.6178243,130.4220436,15z/data=!4m5!3m4!1s0x0:0xf860446ec0274080!8m2!3d33.6178243!4d130.4220436" target="_blank">
+// <img height="350" src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&amp;size=810x350&amp;maptype=roadmap
+// &amp;markers=color:red%7C
+// &amp;key=AIzaSyBJh2nohMG330Kc_tUM149dUrGuYS5bKwU" width="810" /></a>
 
     L.tileLayer(mbUrl, {
-        subdomains: 'abcd',
+        // subdomains: 'abcd',
         maxZoom: 18,
-        attribution: mbAttr,
+        // attribution: mbAttr,
         id: id
     }).addTo(map);
+
+    L.marker([33.6178243,130.4220436]).addTo(map);
 }
 
 function initStamen(id, imgFormat) {
