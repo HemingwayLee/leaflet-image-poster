@@ -83,7 +83,7 @@ function setLayer(layer) {
 }
 
 function initMapbox(id) {
-    console.log("!!!??!!");
+    console.log("AAABCCDDDDDCBB");
 
     pixelLimit = undefined;
     // var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -114,7 +114,18 @@ function initMapbox(id) {
         id: id
     }).addTo(map);
 
-    L.marker([33.6178243,130.4220436]).addTo(map);
+    var googleIcon = L.icon({
+        iconUrl: 'marker2.png',
+        
+        iconSize:     [15, 25], // size of the icon
+        // shadowSize:   [50, 64], // size of the shadow
+        // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        // shadowAnchor: [4, 62],  // the same for the shadow
+        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    L.marker([33.6178243,130.4220436], {icon: googleIcon}).addTo(map);
+
+    //marker.png
 }
 
 function initStamen(id, imgFormat) {
