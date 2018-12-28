@@ -11,24 +11,24 @@ var lastView = {};
 var pixelLimit;
 
 var layers = {
-    'mapbox.blue-marble-topo-jan': [initMapbox, 'EPSG:3857'],
-    'mapbox.blue-marble-topo-jul': [initMapbox, 'EPSG:3857'],
-    'mapbox.comic': [initMapbox, 'EPSG:3857'],
-    'mapbox.dark': [initMapbox, 'EPSG:3857'],
-    'mapbox.emerald': [initMapbox, 'EPSG:3857'],
-    'mapbox.high-contrast': [initMapbox, 'EPSG:3857'],
-    'mapbox.light': [initMapbox, 'EPSG:3857'],
-    'mapbox.natural-earth-2': [initMapbox, 'EPSG:3857'],
-    'mapbox.outdoors': [initMapbox, 'EPSG:3857'],
-    'mapbox.pencil': [initMapbox, 'EPSG:3857'],
-    'mapbox.pirates': [initMapbox, 'EPSG:3857'],
-    'mapbox.run-bike-hike': [initMapbox, 'EPSG:3857'],
-    'mapbox.satellite': [initMapbox, 'EPSG:3857'],
-    'mapbox.streets': [initMapbox, 'EPSG:3857'],
-    'mapbox.wheatpaste': [initMapbox, 'EPSG:3857'],
-    'toner': [initStamen, 'EPSG:3857', 'png'],
-    'watercolor': [initStamen, 'EPSG:3857'],
-    'ch.swisstopo.pixelkarte-farbe': [initSwisstopo, 'EPSG:21781']
+    // 'mapbox.blue-marble-topo-jan': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.blue-marble-topo-jul': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.comic': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.dark': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.emerald': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.high-contrast': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.light': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.natural-earth-2': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.outdoors': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.pencil': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.pirates': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.run-bike-hike': [initMapbox, 'EPSG:3857'],
+    // 'mapbox.satellite': [initMapbox, 'EPSG:3857'],
+    'mapbox.streets': [initMapbox, 'EPSG:3857']
+    // 'mapbox.wheatpaste': [initMapbox, 'EPSG:3857'],
+    // 'toner': [initStamen, 'EPSG:3857', 'png'],
+    // 'watercolor': [initStamen, 'EPSG:3857'],
+    // 'ch.swisstopo.pixelkarte-farbe': [initSwisstopo, 'EPSG:21781']
 }
 
 init('mapbox.streets');
@@ -83,11 +83,25 @@ function setLayer(layer) {
 }
 
 function initMapbox(id) {
+    var addr = document.getElementById('address').value;
+    
+    var gps = [33.6178243,130.4220436];
+    if (addr != "") {
+        var pos = addr.substring(
+            addr.indexOf("@") + 1,
+            addr.indexOf("data") - 5
+        );
+    
+        gps = pos.split(",").map(function(item) {
+            return parseFloat(item);
+        });
+    }
+
     pixelLimit = undefined;
     var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicnowIiwiYSI6ImNqaDBtbXZ6cTF0OG4yd280MDUwejB0N3kifQ.iBwY_zB2gzQizC2W-0zE2A';
 
     map = L.map('map');
-    map.setView([33.6178243,130.4220436], 15);
+    map.setView(gps, 15);
 
     L.tileLayer(mbUrl, {
         maxZoom: 18,
@@ -99,7 +113,7 @@ function initMapbox(id) {
         iconSize: [15, 25], 
     });
 
-    L.marker([33.6178243,130.4220436], {icon: googleIcon}).addTo(map);
+    L.marker(gps, {icon: googleIcon}).addTo(map);
 }
 
 function initStamen(id, imgFormat) {
