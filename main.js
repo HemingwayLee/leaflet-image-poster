@@ -101,7 +101,7 @@ function initMapbox(id) {
     var mbUrl = 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicnowIiwiYSI6ImNqaDBtbXZ6cTF0OG4yd280MDUwejB0N3kifQ.iBwY_zB2gzQizC2W-0zE2A';
 
     map = L.map('map');
-    map.setView(gps, 15);
+    map.setView(gps, 14);
 
     L.tileLayer(mbUrl, {
         maxZoom: 18,
