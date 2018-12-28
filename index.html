@@ -28,15 +28,5 @@
                 crossorigin="anonymous"></script>
         <script src="js/proj4leaflet.js"></script>
         <script src="bundle.js"></script>
-        <script src="html2canvas.js"></script>
-        <script>
-        function convert() {
-          html2canvas(document.querySelector("#map")).then(canvas => {
-            document.body.appendChild(canvas)
-          });
-        }
-        </script>
-        <input type="button" onclick="convert();" value="Convert" style="font-size: 20px; -webkit-appearance: button;"></input>
-        <hr>
     </body>
 </html>
